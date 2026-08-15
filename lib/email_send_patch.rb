@@ -1,6 +1,8 @@
 require 'pathname'
 
 class EmailSendPatch
+  FIND_IMG_SRC_PATTERN = /(<img[^>]+src=")(?:#{Setting.protocol}:\d*\/\/[^\/]+)?#{Redmine::Utils.relative_url_root}([^"]+)("[^>]*>)/
+
   def self.delivering_email(message)
     text_part = message.text_part
     html_part = message.html_part
@@ -11,7 +13,7 @@ class EmailSendPatch
       related.add_part html_part
       html_part.body = html_part.body.to_s.gsub(/<body[^>]*>/, "\\0 ")
       html_part.body = html_part.body.to_s.gsub(/srcset="*"/, "")
-      html_part.body = html_part.body.to_s.gsub(FIND_IMG_SRC_PATTERN) do
+      html_part.body = html_part.body.to_s.gsub(EmailSendPatch::FIND_IMG_SRC_PATTERN) do
         before_src = $1
         image_url = $2
         after_src = $3
