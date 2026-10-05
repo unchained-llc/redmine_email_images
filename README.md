@@ -22,3 +22,11 @@ bundle install
 ## Compatibility
 
 The latest version of this plugin is only tested with Redmine 5.1
+
+## Security
+
+Only image attachments on the configured Redmine origin and exact attachment
+routes are embedded. All To, Cc and Bcc recipients must be active Redmine users
+with permission to view the attachment. External image URLs are left unchanged.
+
+Run `ruby test/email_send_patch_test.rb`; install the `mail` gem to include MIME tests.
